@@ -3,9 +3,11 @@
 A digital coffee machine
 """
 
+__version__ = "0.1"
+__author__ = "Krit Jitpungtham"
 
-class Machine():
-
+# Machine class Encapsule data และ method ที่เกี่ยวข้องกับ Machine
+class Machine:
     def __init__(self, water, milk, coffee_pow, money, coffee_menu):
 
         self.water = water
@@ -14,16 +16,15 @@ class Machine():
         self.money = money
         self.coffee_menu = coffee_menu
 
-        self.command_list = {
-            "report": self.report,
-            "off": self.off
-        }
+        self.command_list = {"report": self.report, "off": self.off}
 
+    # โปรแกรมหลักในการรับคำสั่งจาก user
+    # ในตัวอย่างใช้ loop while true ไม่แน่ใจแบบไหนดีกว่ากัน
     def prompt(self):
 
-        command = input(
-            "​What would you like? (espresso/ latte/ cappuccino): ")
+        command = input("​What would you like? (espresso/ latte/ cappuccino): ")
 
+        # เช็ค command ใน list และเรียกใช้
         if command in self.command_list.keys():
             self.command_list[command]()
 
@@ -31,13 +32,19 @@ class Machine():
             self.coffee_obj = self.coffee_menu.get_menu()[command]
             self.check(self.coffee_obj)
 
+        else:
+            print("Command not found. Try again")
+            self.prompt()
+
     def report(self):
-        print(f"""
+        print(
+            f"""
                   Water \t: {self.water} \tml,
                   Milk  \t: {self.milk} \tml,
                   Coffee \t: {self.coffee_pow} \tg,
                   Money \t: ${self.money}
-                  """)
+                  """
+        )
         self.prompt()
 
     def off(self):
@@ -82,8 +89,8 @@ class Machine():
         self.prompt()
 
 
-class Coffee():
-
+# Class Coffee สำหรับ ข้อมูลของกาแฟแต่ละชนิด
+class Coffee:
     def __init__(self, name, water, milk, coffee, cost):
         self.name = name
         self.water = water
@@ -92,29 +99,30 @@ class Coffee():
         self.cost = cost
 
 
-class Coffee_menu():
-
+# ใช้จัดการ class Coffee
+class Coffee_menu:
     def __init__(self):
+
         espresso = Coffee("espresso", 50, 0, 18, 1.50)
         latte = Coffee("latte", 200, 150, 24, 2.50)
         cappuccino = Coffee("cappuccino", 250, 100, 24, 3.00)
         self.menu_list = {
             "espresso": espresso,
             "latte": latte,
-            "cappuccino": cappuccino
+            "cappuccino": cappuccino,
         }
 
     def add_menu(self, name, water, milk, coffee, cost):
 
-        name = Coffee(water, milk, coffee, cost)
-        Coffee.menu_list.append(name)
+        new_coffee = Coffee(water, milk, coffee, cost)
+        Coffee.menu_list.append(new_coffee)
 
     def get_menu(self):
         return self.menu_list
 
 
-class Coin():
-
+# class Coin จัดการเรื่องเงิน
+class Coin:
     def __init__(self):
         self.value = 0
 
@@ -123,16 +131,16 @@ class Coin():
         dime = int(input("How many dimes?: ")) * 0.10
         nickle = int(input("How many nickles?: ")) * 0.05
         penny = int(input("How many pennies?: ")) * 0.01
-        self.value += (penny + nickle + dime + quarter)
+        self.value += penny + nickle + dime + quarter
 
 
 def main():
-    """ Main entry point of the app """
+    """Main entry point of the app"""
     coffee_menu = Coffee_menu()
     machine = Machine(300, 200, 100, 0, coffee_menu)
     machine.prompt()
 
 
 if __name__ == "__main__":
-    """ This is executed when run from the command line """
+    """This is executed when run from the command line"""
     main()
